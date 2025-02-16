@@ -6,21 +6,20 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 09:21:34 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/15 09:26:06 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/16 14:53:14 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int	kill_philosophers(t_philo *philo, int i, int all)
+int	kill_philosophers(t_philo *philo, int all)
 {
 	int	j;
 
 	j = 0;
 	while (j < philo->data->nbr_philo)
 	{
-		if (j != i)
-			kill(philo[j].pid, SIGTERM);
+		kill(philo[j].pid, SIGKILL);
 		j++;
 	}
 	if (all)
@@ -29,45 +28,45 @@ int	kill_philosophers(t_philo *philo, int i, int all)
 	return (1);
 }
 
-int	check_other_philos(t_philo *philo, int i)
+void	*check_all_eat(void *arg)
 {
-	int	j;
+	t_philo	*philo;
+	int		i;
 
-	philo[i].finished = 1;
-	j = 0;
-	while (j < philo->data->nbr_philo)
+	philo = (t_philo *)arg;
+	i = 0;
+	while (i < philo->data->nbr_philo)
 	{
-		if (j != i && philo[j].finished == 0)
-			return (1);
-		j++;
+		sem_wait(philo->data->eat);
+		i++;
 	}
-	return (0);
+	kill_philosophers(philo, 1);
+	return (NULL);
+}
+
+void	*check_die(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	sem_wait(philo->data->died);
+	kill_philosophers(philo, 0);
+	return (NULL);
 }
 
 int	monitor_philosophers(t_philo *philo)
 {
-	int	i;
-	int	all_ate;
-	int	status;
-	int	exit_status;
+	pthread_t	monitor_die;
+	pthread_t	monitor_eat;
 
-	while (1)
+	pthread_create(&monitor_die, NULL, check_die, philo);
+	pthread_detach(monitor_die);
+	if (philo->data->eat_limit > 0)
 	{
-		i = 0;
-		while (i < philo->data->nbr_philo)
-		{
-			if (waitpid(philo[i].pid, &status, WNOHANG) > 0)
-			{
-				exit_status = WEXITSTATUS(status);
-				all_ate = 1;
-				if (exit_status == 1)
-					return (kill_philosophers(philo, i, 0));
-				else if (exit_status == 0 && check_other_philos(philo, i))
-					all_ate = 0;
-				if (all_ate)
-					return (kill_philosophers(philo, i, 1));
-			}
-			i++;
-		}
+		pthread_create(&monitor_eat, NULL, check_all_eat, philo);
+		pthread_detach(monitor_eat);
 	}
+	while (wait(NULL) > 0)
+		;
+	return (0);
 }

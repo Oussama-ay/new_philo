@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:26:11 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/15 10:05:45 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/16 13:20:16 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 
 # define FORK_SEM "/forks"
 # define PRINT_SEM "/print"
+# define DIE_SEM "/died"
+# define EAT_SEM "/eat"
 
 typedef struct s_data
 {
@@ -42,6 +44,8 @@ typedef struct s_data
 	size_t			time_to_sleep;
 	sem_t			*forks;
 	sem_t			*print;
+	sem_t			*died;
+	sem_t			*eat;
 }	t_data;
 
 typedef struct s_philo
@@ -68,7 +72,7 @@ int			ft_strcmp(const char *s1, const char *s2);
 
 /*----------dining-----------*/
 void		start_dining(t_data *data);
-void		_print(t_philo *philo, const char *msg);
+int			_print(t_philo *philo, const char *msg);
 int			monitor_philosophers(t_philo *philo);
 
 /*----------dining_utils-----*/
