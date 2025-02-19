@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:40 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/15 08:21:05 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/19 09:01:07 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	_print(t_philo *philo, const char *msg)
 void	*philos_routine(void *arg)
 {
 	t_philo	*philo;
-	int		finish;
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
@@ -49,14 +48,19 @@ void	*philos_routine(void *arg)
 		_print(philo, FORK);
 		pthread_mutex_lock(philo->left_fork);
 		_print(philo, FORK);
-		_print(philo, EAT);
+		if (_print(philo, EAT))
+		{
+			pthread_mutex_unlock(philo->right_fork);
+			pthread_mutex_unlock(philo->left_fork);
+			break ;
+		}
 		usleep(philo->data->time_to_eat * 1000);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
-		_print(philo, SLP);
+		if (_print(philo, SLP))
+			break;
 		usleep(philo->data->time_to_sleep * 1000);
-		finish = _print(philo, THINK);
-		if (finish)
+		if (_print(philo, THINK))
 			break ;
 	}
 	return (NULL);

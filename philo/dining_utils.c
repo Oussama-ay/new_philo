@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:41:13 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/14 21:40:26 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/19 08:56:16 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ void	init_dining(t_data *data, t_philo *philo, t_mutex *forks)
 		philo[i].data = data;
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % data->nbr_philo];
+		if (philo[i].id % 2 == 0)
+		{
+			philo[i].right_fork = &forks[i];
+			philo[i].left_fork = &forks[(i + 1) % data->nbr_philo];
+		}
 		philo[i].meals_eaten = 0;
 		i++;
 	}
