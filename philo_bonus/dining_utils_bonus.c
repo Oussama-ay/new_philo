@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:41:13 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/16 14:38:39 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/22 13:20:16 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	init_sema(t_data *data)
 	sem_unlink(PRINT_SEM);
 	sem_unlink(DIE_SEM);
 	sem_unlink(EAT_SEM);
+	sem_unlink(PORT_SEM);
+	data->port = sem_open(PORT_SEM, O_CREAT, 0644, data->nbr_philo / 2);
 	data->forks = sem_open(FORK_SEM, O_CREAT, 0644, data->nbr_philo);
 	data->print = sem_open(PRINT_SEM, O_CREAT, 0644, 1);
 	data->died = sem_open(DIE_SEM, O_CREAT, 0644, 0);
@@ -51,8 +53,7 @@ void	create_process(t_philo *philo, void (*f)(t_philo *), int n)
 	i = 0;
 	while (i < n)
 	{
-		if (i % 2 || (i == n - 1 && n % 2))
-			_print(&philo[i], THINK);
+		_print(&philo[i], THINK);
 		philo[i].pid = fork();
 		if (philo[i].pid == 0)
 		{
@@ -69,8 +70,10 @@ void	cleanup_the_table(t_data *data)
 	sem_close(data->print);
 	sem_close(data->died);
 	sem_close(data->eat);
+	sem_close(data->port);
 	sem_unlink(FORK_SEM);
 	sem_unlink(PRINT_SEM);
 	sem_unlink(DIE_SEM);
 	sem_unlink(EAT_SEM);
+	sem_unlink(PORT_SEM);
 }

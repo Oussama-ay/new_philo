@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:40 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/19 09:01:07 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/23 11:09:45 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,27 @@ void	*philos_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep(1000);
+		usleep(philo->data->time_to_eat * 500);
 	while (1)
 	{
-		pthread_mutex_lock(philo->right_fork);
-		_print(philo, FORK);
-		pthread_mutex_lock(philo->left_fork);
-		_print(philo, FORK);
+		(pthread_mutex_lock(philo->right_fork), _print(philo, FORK));
+		(pthread_mutex_lock(philo->left_fork), _print(philo, FORK));
 		if (_print(philo, EAT))
 		{
 			pthread_mutex_unlock(philo->right_fork);
 			pthread_mutex_unlock(philo->left_fork);
 			break ;
 		}
-		usleep(philo->data->time_to_eat * 1000);
+		_usleep(philo->data->time_to_eat);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
 		if (_print(philo, SLP))
-			break;
-		usleep(philo->data->time_to_sleep * 1000);
+			break ;
+		_usleep(philo->data->time_to_sleep);
 		if (_print(philo, THINK))
 			break ;
+		if (philo->id % 2)
+			usleep(philo->data->time_to_eat * 500);
 	}
 	return (NULL);
 }

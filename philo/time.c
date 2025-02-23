@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 09:09:26 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/14 10:22:44 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/23 10:41:36 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,15 @@ size_t	ft_current_time(size_t start)
 	gettimeofday(&time, NULL);
 	current = (time.tv_sec * 1000 + time.tv_usec / 1000) - start;
 	return (current);
+}
+
+void	_usleep(size_t time)
+{
+	size_t	start;
+
+	start = get_time();
+	while (get_time() - start < time)
+		usleep(1);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

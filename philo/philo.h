@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:26:11 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/19 09:00:36 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/23 09:52:16 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_data
 typedef struct s_philo
 {
 	int				id;
-	int				index;
 	int				meals_eaten;
 	size_t			last_meal_time;
 	pthread_t		thread;
@@ -62,6 +61,7 @@ size_t		ft_strlen(char *str);
 size_t		get_time(void);
 size_t		ft_current_time(size_t time_start);
 int			ft_strcmp(const char *s1, const char *s2);
+void		_usleep(size_t time);
 
 /*----------dining-----------*/
 void		start_dining(t_data *data);

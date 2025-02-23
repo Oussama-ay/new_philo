@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:26:11 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/16 13:20:16 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/22 13:18:57 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define PRINT_SEM "/print"
 # define DIE_SEM "/died"
 # define EAT_SEM "/eat"
+# define PORT_SEM "/port"
 
 typedef struct s_data
 {
@@ -46,6 +47,7 @@ typedef struct s_data
 	sem_t			*print;
 	sem_t			*died;
 	sem_t			*eat;
+	sem_t			*port;
 }	t_data;
 
 typedef struct s_philo
