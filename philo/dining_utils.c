@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:41:13 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 11:09:11 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/25 10:19:11 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ void	manage_threads(t_philo *philo, void *(*f)(void *), int n, int flag)
 	if (flag)
 	{
 		while (++i < n)
+		{
+			_print(&philo[i], THINK);
 			pthread_create(&philo[i].thread, NULL, f, &philo[i]);
+		}
 		return ;
 	}
 	while (++i < n)
