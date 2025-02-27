@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:40 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 16:56:21 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 17:52:12 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 
 int	_print(t_philo *philo, const char *msg)
 {
-	int	over;
 	int	is_eating;
 
-	pthread_mutex_lock(&philo->data->check_finish);
-	over = philo->data->dining_over;
-	pthread_mutex_unlock(&philo->data->check_finish);
-	if (over)
-		return (1);
-	is_eating = ft_strcmp(msg, EAT);
 	pthread_mutex_lock(&philo->data->print_lock);
+	pthread_mutex_lock(&philo->data->check_finish);
+	if (philo->data->dining_over)
+	{
+		pthread_mutex_unlock(&philo->data->print_lock);
+		pthread_mutex_unlock(&philo->data->check_finish);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->data->check_finish);
+	is_eating = ft_strcmp(msg, EAT);
 	printf("%zu	%d	%s\n",
 		ft_current_time(philo->data->time_start), philo->id, msg);
 	if (is_eating == 0)
@@ -35,46 +37,52 @@ int	_print(t_philo *philo, const char *msg)
 	return (0);
 }
 
-void	*philos_routine(void *arg)
-{
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
-	if (philo->id % 2 == 0)
-		usleep(philo->data->time_to_eat * 500);
-	while (1)
-	{
-		(pthread_mutex_lock(philo->right_fork), _print(philo, FORK));
-		(pthread_mutex_lock(philo->left_fork), _print(philo, FORK));
-		if (_print(philo, EAT))
-		{
-			pthread_mutex_unlock(philo->right_fork);
-			pthread_mutex_unlock(philo->left_fork);
-			break ;
-		}
-		_usleep(philo->data->time_to_eat);
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(philo->left_fork);
-		if (_print(philo, SLP))
-			break ;
-		_usleep(philo->data->time_to_sleep);
-		if (_print(philo, THINK))
-			break ;
-		if (philo->id % 2)
-			usleep(philo->data->time_to_eat * 500);
-	}
-	return (NULL);
-}
-
 void	*single_philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(philo->left_fork);
+	_print(philo, THINK);
 	_print(philo, FORK);
 	usleep(philo->data->time_to_die * 1000);
+	return (NULL);
+}
+
+int	_eating(t_philo *philo)
+{
+	(pthread_mutex_lock(philo->left_fork), _print(philo, FORK));
+	(pthread_mutex_lock(philo->right_fork), _print(philo, FORK));
+	if (_print(philo, EAT))
+	{
+		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(philo->right_fork);
+		return (1);
+	}
+	_usleep(philo->data->time_to_eat);
 	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
+	return (0);
+}
+
+void	*philos_routine(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0 || philo->id == philo->data->nbr_philo)
+		usleep(1000);
+	while (1)
+	{
+		if (_print(philo, THINK))
+			break ;
+		if (philo->data->nbr_philo % 2)
+			usleep(100);
+		if (_eating(philo))
+			break ;
+		if (_print(philo, SLP))
+			break ;
+		_usleep(philo->data->time_to_sleep);
+	}
 	return (NULL);
 }
 

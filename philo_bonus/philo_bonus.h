@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:26:11 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/22 13:18:57 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 18:38:34 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ size_t		ft_strlen(char *str);
 size_t		get_time(void);
 size_t		ft_current_time(size_t time_start);
 int			ft_strcmp(const char *s1, const char *s2);
+void		_usleep(size_t time);
 
 /*----------dining-----------*/
 void		start_dining(t_data *data);

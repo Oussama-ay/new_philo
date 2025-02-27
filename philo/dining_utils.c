@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:41:13 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/25 10:19:11 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 17:48:06 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,16 @@ static void	init_data_mutex(t_data *data, t_mutex *forks)
 void	init_dining(t_data *data, t_philo *philo, t_mutex *forks)
 {
 	int		i;
-	size_t	tmp;
 
 	init_data_mutex(data, forks);
-	tmp = ft_current_time(data->time_start);
 	i = 0;
 	while (i < data->nbr_philo)
 	{
-		philo[i].last_meal_time = tmp;
+		philo[i].last_meal_time = 0;
 		philo[i].id = i + 1;
 		philo[i].data = data;
 		philo[i].left_fork = &forks[i];
 		philo[i].right_fork = &forks[(i + 1) % data->nbr_philo];
-		if (philo[i].id % 2 == 0)
-		{
-			philo[i].left_fork = &forks[(i + 1) % data->nbr_philo];
-			philo[i].right_fork = &forks[i];
-		}
 		philo[i].meals_eaten = 0;
 		i++;
 	}
@@ -77,7 +70,7 @@ void	manage_threads(t_philo *philo, void *(*f)(void *), int n, int flag)
 	{
 		while (++i < n)
 		{
-			_print(&philo[i], THINK);
+			philo[i].last_meal_time = ft_current_time(philo->data->time_start);
 			pthread_create(&philo[i].thread, NULL, f, &philo[i]);
 		}
 		return ;

@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:26:11 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 09:52:16 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 13:54:52 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void		_usleep(size_t time);
 void		start_dining(t_data *data);
 int			monitor_philosophers(t_philo *philo);
 int			_print(t_philo *philo, const char *msg);
+int			_eating(t_philo *philo);
 
 /*----------dining_utils-----*/
 int			allocation(int n, t_philo **philo, t_mutex **forks);

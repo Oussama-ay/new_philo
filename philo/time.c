@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 09:09:26 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 10:41:36 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 14:28:04 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	_usleep(size_t time)
 
 	start = get_time();
 	while (get_time() - start < time)
-		usleep(1);
+		usleep(100);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)

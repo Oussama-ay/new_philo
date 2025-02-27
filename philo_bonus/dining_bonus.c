@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:40 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 11:13:12 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 18:38:09 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,6 @@ void	*monitor_routine(void *arg)
 	return (NULL);
 }
 
-void	_usleep(size_t time)
-{
-	size_t	start;
-
-	start = get_time();
-	while (get_time() - start < time)
-		usleep(100);
-}
-
 void	philos_routine(t_philo *philo)
 {
 	pthread_t	monitor_thread;
@@ -65,9 +56,7 @@ void	philos_routine(t_philo *philo)
 	pthread_detach(monitor_thread);
 	while (1)
 	{
-		// sem_wait(philo->data->port);
-		if (philo->data->nbr_philo % 2)
-			usleep(1000);
+		sem_wait(philo->data->port);
 		sem_wait(philo->data->forks);
 		_print(philo, FORK);
 		sem_wait(philo->data->forks);
@@ -76,7 +65,7 @@ void	philos_routine(t_philo *philo)
 		_usleep(philo->data->time_to_eat);
 		sem_post(philo->data->forks);
 		sem_post(philo->data->forks);
-		// sem_post(philo->data->port);
+		sem_post(philo->data->port);
 		if (philo->data->eat_limit != -1 &&
 			philo->meals_eaten >= philo->data->eat_limit)
 		{
@@ -86,6 +75,7 @@ void	philos_routine(t_philo *philo)
 		_print(philo, SLP);
 		_usleep(philo->data->time_to_sleep);
 		_print(philo, THINK);
+		usleep(100);
 	}
 }
 

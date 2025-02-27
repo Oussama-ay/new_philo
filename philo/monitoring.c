@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 09:21:34 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/23 11:06:40 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 18:00:01 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,15 @@ int	print_status(const char *status, t_philo *philo, int flag)
 int	check_philosopher(t_philo *philo)
 {
 	size_t	time;
-	int		died;
 
-	died = 0;
 	pthread_mutex_lock(&philo->data->print_lock);
 	time = ft_current_time(philo->data->time_start) - philo->last_meal_time;
 	if (time >= philo->data->time_to_die)
-		died = 1;
-	pthread_mutex_unlock(&philo->data->print_lock);
-	if (died)
+	{
+		pthread_mutex_unlock(&philo->data->print_lock);
 		return (print_status("died", philo, 1));
+	}
+	pthread_mutex_unlock(&philo->data->print_lock);
 	return (0);
 }
 
@@ -64,6 +63,5 @@ int	monitor_philosophers(t_philo *philo)
 		}
 		if (all_ate)
 			return (print_status(NULL, philo, 0));
-		usleep(1000);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 09:09:26 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/02/15 08:31:22 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/02/26 18:38:17 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,13 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (s1[i] && s1[i] == s2[i])
 		i++;
 	return (s1[i] - s2[i]);
+}
+
+void	_usleep(size_t time)
+{
+	size_t	start;
+
+	start = get_time();
+	while (get_time() - start < time)
+		usleep(100);
 }
